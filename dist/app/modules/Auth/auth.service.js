@@ -51,7 +51,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const config_1 = __importDefault(require("../../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const prisma_1 = __importDefault(require("../../utils/prisma"));
-const user_service_1 = require("../User/user.service");
 const generateToken_1 = require("../../utils/generateToken");
 const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = yield prisma_1.default.user.findUniqueOrThrow({
@@ -63,10 +62,13 @@ const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     if (!isCorrectPassword) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Password incorrect');
     }
-    if (!userData.isEmailVerified) {
-        yield user_service_1.UserServices.resendUserVerificationEmail(userData.email);
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Email is not verified, Please check your email for the verification link.');
-    }
+    // if (!userData.isEmailVerified) {
+    //   await UserServices.resendUserVerificationEmail(userData.email);
+    //   throw new AppError(
+    //     httpStatus.BAD_REQUEST,
+    //     'Email is not verified, Please check your email for the verification link.',
+    //   );
+    // }
     const accessToken = yield (0, generateToken_1.generateToken)({
         id: userData.id,
         name: userData.nickname,
